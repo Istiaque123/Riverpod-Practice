@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_prac/utils/state_notifier_provider_practice.dart';
 import 'package:riverpod_prac/utils/strem_provider_practice.dart';
 
 class MyHomeScreen extends ConsumerStatefulWidget {
@@ -15,28 +16,30 @@ class _MyHomeScreenState extends ConsumerState<MyHomeScreen> {
   @override
   Widget build(BuildContext context) {
 
-    var numValue = ref.watch(numStreamProvider);
+    int count;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
       ),
       body: Center(
-        child: numValue.when(
-          data: (data){
-            return Text(
-              '$data',
-              style: const TextStyle(fontSize: 24),
-              );
-          }, 
-          error: (error, stackTrace){
-            return Text(
-              '$error',
-              style: const TextStyle(color: Colors.red, fontSize: 18),
+        child: Consumer(
+          builder: (context, ref, child){
+          count = ref.watch(counterProvider);
+          return Text(
+            '$count',
+            style: const TextStyle(
+              fontSize: 25
+            ),
             );
-          }, 
-          loading: () => const CircularProgressIndicator()
+          }
           ),
       ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: (){
+          ref.read(counterProvider.notifier).incrementValue();
+        }
+        ),
       
     );
   }
